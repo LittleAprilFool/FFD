@@ -2,70 +2,50 @@
 
 obj3d::obj3d()
 {
-
+    rotateX = 45;
+    rotateY = 30;
 }
 
 void obj3d::process(QString s) {
     QStringList slist = s.split(" ");
-    if(slist[0].compare("v") & slist.size() == 4) {
-        point3d point;
-        point.x = slist[1].toFloat();
-        point.y = slist[2].toFloat();
-        point.z = slist[3].toFloat();
+
+    if((slist[0].compare("v") == 0) & slist.size() == 4) {
+        QVector3D point = QVector3D(slist[1].toFloat(), slist[2].toFloat(), slist[3].toFloat());
+        ori_V.append(point);
         V.append(point);
+        return;
     }
-    if(slist[0].compare("vn") & slist.size() == 4) {
-        point3d point;
-        point.x = slist[1].toFloat();
-        point.y = slist[2].toFloat();
-        point.z = slist[3].toFloat();
+    if((slist[0].compare("vn") == 0) & slist.size() == 4) {
+        QVector3D point = QVector3D(slist[1].toFloat(), slist[2].toFloat(), slist[3].toFloat());
         VN.append(point);
+        return;
     }
-    if(slist[0].compare("f") & slist.size() == 4) {
-        face f;
 
-        QStringList plist1 = slist[1].split("/");
-        f.p1.v = plist1[0].toInt() - 1;
-        f.p1.vn = plist1[2].toInt() - 1;
+    if((slist[0].compare("f") == 0) & slist.size() >= 4) {
+        Face f;
 
-        QStringList plist2 = slist[2].split("/");
-        f.p2.v = plist2[0].toInt() - 1;
-        f.p2.vn = plist2[2].toInt() - 1;
-
-        QStringList plist3 = slist[3].split("/");
-        f.p3.v = plist3[0].toInt() - 1;
-        f.p3.vn = plist3[2].toInt() - 1;
+        for(int i = 0; i < (slist.size() - 1); i ++){
+            point2d A;
+            QStringList plist = slist[i+1].split("/");
+            A.v = plist[0].toInt() - 1;
+            A.vn = plist[2].toInt() - 1;
+            f.append(A);
+        }
 
         F.append(f);
-    }
 
-    if(slist[0].compare("f") & slist.size() == 5) {
-        face f1;
-        face f2;
-
-        QStringList plist1 = slist[1].split("/");
-        f1.p1.v = plist1[0].toInt() - 1;
-        f1.p1.vn = plist1[2].toInt() - 1;
-        f2.p1.v = plist1[0].toInt() - 1;
-        f2.p1.vn = plist1[2].toInt() - 1;
-
-        QStringList plist2 = slist[2].split("/");
-        f1.p2.v = plist2[0].toInt() - 1;
-        f1.p2.vn = plist2[2].toInt() - 1;
-
-        QStringList plist3 = slist[3].split("/");
-        f1.p3.v = plist3[0].toInt() - 1;
-        f1.p3.vn = plist3[2].toInt() - 1;
-        f2.p2.v = plist3[0].toInt() - 1;
-        f2.p2.vn = plist3[2].toInt() - 1;
-
-        QStringList plist4 = slist[4].split("/");
-        f2.p3.v = plist4[0].toInt() - 1;
-        f2.p3.vn = plist4[2].toInt() - 1;
-
-        F.append(f1);
-        F.append(f2);
+        return;
     }
 }
 
+void obj3d::reset(){
+    for(int i = 0; i < ori_V.size(); i ++)
+        V[i] = ori_V[i];
+}
 
+void obj3d::clear(){
+    F.clear();
+    V.clear();
+    VN.clear();
+    ori_V.clear();
+}

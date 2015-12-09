@@ -4,32 +4,28 @@
 #include <QVector>
 #include <QtOpenGL>
 #include <QString>
-
-typedef struct Point3d {
-    GLfloat x;
-    GLfloat y;
-    GLfloat z;
-} point3d;
+#include <QVector3D>
 
 typedef struct Point2d {
     int v;
     int vn;
 } point2d;
 
-typedef struct Face {
-    point2d p1;
-    point2d p2;
-    point2d p3;
-} face;
+typedef QVector<point2d> Face;
 
 class obj3d
 {
 public:
     obj3d();
-    QVector<point3d> V;
-    QVector<point3d> VN;
-    QVector<face> F;
+    QVector<QVector3D> V;
+    QVector<QVector3D> ori_V;
+    QVector<QVector3D> VN;
+    QVector<Face> F;
     void process(QString s);
+    void clear();
+    float rotateX;
+    float rotateY;
+    void reset();
 };
 
 #endif // OBJ3D_H
