@@ -1,6 +1,8 @@
-# FFD
+# Free From Deformation
 
-free form deformation
+An implementation of [Free Form Deformation](https://en.wikipedia.org/wiki/Free-form_deformation).
+
+## Showcase
 
 ![](./Resources/pic1.jpg)
 ![](./Resources/pic2.jpg)
