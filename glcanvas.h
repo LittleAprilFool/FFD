@@ -32,8 +32,9 @@ signals:
 public slots:
 
 protected:
-    void paintGL();
-    void initializeGL();
+    void paintGL() override;
+    void initializeGL() override;
+    void resizeGL(int w, int h) override;
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

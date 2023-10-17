@@ -277,6 +277,12 @@ void glCanvas::paintGL()
 
 }
 
+void glCanvas::resizeGL(int w, int h)
+{
+    auto width = std::min(w, h);
+    glViewport(0, 0, (GLint) width, (GLint) width);
+}
+
 void glCanvas::mousePressEvent(QMouseEvent *event) {
     mouse_caputured = true;
     mouse_ori_pos = event->pos();
