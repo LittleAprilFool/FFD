@@ -1,5 +1,5 @@
 #include "glcanvas.h"
-
+#include <iostream>
 glCanvas::glCanvas(QGLWidget *parent) : QGLWidget(parent)
 {
     obj = new obj3d();
@@ -9,6 +9,7 @@ glCanvas::glCanvas(QGLWidget *parent) : QGLWidget(parent)
     control_point->setColor(focus_point, GREEN);
     isColor = true;
     qDebug()<<glGetString(GL_VERSION);
+    std::cout<< "glCanvas size" << size().width() << ":" << size().height() << "p" << parent << std::endl;
 }
 
 glCanvas::~glCanvas(){
@@ -27,6 +28,10 @@ void glCanvas::open(QString fileName)
         obj->process(line);
     }
     reset();
+    renderText(0, 0, "yo");
+    renderText(10, 20, "yo2");
+    std::cout<< "yo size" << size().width() << ":" << size().height() << std::endl;
+
     updateGL();
 }
 
@@ -77,7 +82,9 @@ float Bernstein(int n, int i, float u){
 
 QVector3D glCanvas::convertPoint(QVector3D point)
 {
-    x0 = QVector3D(-control_point->size(),-control_point->size(),-control_point->size());
+    x0 = QVector3D(-control_point->size(),
+                   -control_point->size(),
+                   -control_point->size());
     QVector3D result = (point - x0) / (2 * control_point->size());
     return result;
 }
@@ -105,15 +112,18 @@ void glCanvas::updateOBJ()
 
         QVector3D newp = QVector3D(0,0,0);
 
-        for(int i = 0; i < l; i ++)
-            for(int j = 0; j < m; j ++)
-                for(int k = 0; k < n; k ++){
+        for(int i = 0; i < l; i ++) {
+            QVector3D pointi;
+            for (int j = 0; j < m; j++) {
+                QVector3D pointj;
+                for (int k = 0; k < n; k++) {
                     QVector3D control_p = convertPoint(control_point->getPosition(i, j, k));
-                    float Bi = Bernstein(l-1,i,s);
-                    float Bj = Bernstein(m-1,j,t);
-                    float Bk = Bernstein(n-1,k,u);
-                    newp = newp + Bi * Bj * Bk * control_p;
+                    pointj += Bernstein(n - 1, k, u) * control_p;
                 }
+                pointi += Bernstein(m - 1, j, t) * pointj;
+            }
+            newp += pointi * Bernstein(l - 1, i, s);
+        }
         obj->V[p] = revertPoint(newp);
     }
 }
