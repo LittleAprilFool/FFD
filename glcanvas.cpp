@@ -1,5 +1,4 @@
 #include "glcanvas.h"
-#include <iostream>
 glCanvas::glCanvas(QGLWidget *parent) : QGLWidget(parent)
 {
     obj = new obj3d();
@@ -9,7 +8,6 @@ glCanvas::glCanvas(QGLWidget *parent) : QGLWidget(parent)
     control_point->setColor(focus_point, GREEN);
     isColor = true;
     qDebug()<<glGetString(GL_VERSION);
-    std::cout<< "glCanvas size" << size().width() << ":" << size().height() << "p" << parent << std::endl;
 }
 
 glCanvas::~glCanvas(){
@@ -28,10 +26,6 @@ void glCanvas::open(QString fileName)
         obj->process(line);
     }
     reset();
-    renderText(0, 0, "yo");
-    renderText(10, 20, "yo2");
-    std::cout<< "yo size" << size().width() << ":" << size().height() << std::endl;
-
     updateGL();
 }
 
